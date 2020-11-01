@@ -165,7 +165,7 @@ class Vector:
             target (object): target object to be found in vector
 
         Returns:
-            result (int): index of target object found in vector, -1 if not found
+            result (int): least index of the target object found in vector, -1 if not found
         """
         result = -1
 
@@ -323,4 +323,78 @@ class Vector:
 
             fast += 1
 
-        self._size = slow        
+        self._size = slow
+
+    def bubblesort(self, start=None, end=None, acending=True):
+        """
+        Sorts the vector through bubblesort
+        """
+        if start is None or end is None:
+            start, end = 0, self._size
+        
+        if 0 <= start < end <= self._size:
+            unsorted = True
+            while unsorted:
+                unsorted = False
+                for i in range(start + 1, end):
+                    if self._elements[i] < self._elements[i - 1]:
+                        unsorted = True
+                        temp = self._elements[i]
+                        self._elements[i] = self._elements[i - 1]
+                        self._elements[i - 1] = temp
+
+            if not acending:
+                self._elements[start:end] = self._elements[start:end][::-1]
+        else:
+            raise IndexError('starting and ending index out of valid range')
+
+    def mergesort(self, low=None, high=None, acending=True):
+
+        if low is None or high is None:
+            low, high = 0, self._size
+
+        if high - low < 2:
+            return
+        
+        mid = (low + high) >> 1
+        self.mergesort(low, mid)
+        self.mergesort(mid, high)
+        self.merge(low, mid, high)
+
+        if not acending:
+            self._elements[low:high] = self._elements[low:high][::-1]
+
+    def merge(self, low, mid, high):
+
+        left, right = low, mid
+        temp_container = []        
+        while left < mid or right < high:
+            left_element = self._elements[left] if left < mid else None
+            right_element = self._elements[right] if right < high else None
+
+            if left_element is not None and right_element is not None:                
+                if left_element < right_element:
+                    temp_container.append(left_element)
+                    left += 1
+                else:
+                    temp_container.append(right_element)
+                    right += 1
+                continue
+            
+            if left_element is not None:
+                temp_container.append(left_element)
+                left += 1
+                continue
+
+            if right_element is not None:
+                temp_container.append(right_element)
+                right += 1
+                continue
+
+        self._elements[low:high] = temp_container
+            
+
+
+
+    
+

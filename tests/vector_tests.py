@@ -15,7 +15,7 @@ class TestVector(unittest.TestCase):
         print ("All tests completed")
 
     def setUp(self):
-        print("Initializing vector")
+        # print("Initializing vector")
         self.vector = Vector(8, 0, initial_iter=self.initial_list)
 
     def tearDown(self):
@@ -151,6 +151,33 @@ class TestVector(unittest.TestCase):
         self.vector.insert(2, 2)
         self.vector.deduplicate()
         self.assertEqual([0,1,2,3,4], self.vector.get(0, self.vector.size()))
+
+    def test_bubblesort(self):
+        self.vector.copy_from(self.random_list)
+        self.vector.bubblesort(acending=True)
+        self.assertEqual([1,2,3,4,5], self.vector.get(0, self.vector.size()))
+        self.vector.bubblesort(acending=False)
+        self.assertEqual([5,4,3,2,1], self.vector.get(0, self.vector.size()))
+
+        self.vector.copy_from(self.random_list)
+        self.vector.bubblesort(start=1, end=4, acending=True)
+        self.assertEqual([5,1,2,4,3], self.vector.get(0, self.vector.size()))
+        self.vector.bubblesort(start=1, end=4, acending=False)
+        self.assertEqual([5,4,2,1,3], self.vector.get(0, self.vector.size()))
+
+    def test_mergesort(self):
+        self.vector.copy_from(self.random_list)
+        self.vector.mergesort(acending=True)
+        self.assertEqual([1,2,3,4,5], self.vector.get(0, self.vector.size()))
+        self.vector.mergesort(acending=False)
+        self.assertEqual([5,4,3,2,1], self.vector.get(0, self.vector.size()))
+
+        self.vector.copy_from(self.random_list)
+        self.vector.mergesort(low=1, high=4, acending=True)
+        self.assertEqual([5,1,2,4,3], self.vector.get(0, self.vector.size()))
+        self.vector.mergesort(low=1, high=4, acending=False)
+        self.assertEqual([5,4,2,1,3], self.vector.get(0, self.vector.size()))
+
 
 if __name__ == '__main__':
 

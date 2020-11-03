@@ -55,6 +55,11 @@ class TestVector(unittest.TestCase):
         self.vector.put(4, 14)        
         self.assertEqual(14, self.vector.get(4))
 
+        self.vector[0] = -1
+        self.assertEqual(-1, self.vector[0])
+        self.vector[0:3] = [-1, -2, -3]
+        self.assertEqual([-1, -2, -3], self.vector[0:3])        
+
     def test_get(self):
         """Test get opteration"""                        
         self.assertEqual(0, self.vector.get(0))             
@@ -63,6 +68,10 @@ class TestVector(unittest.TestCase):
         self.assertEqual(self.initial_list[0:5], self.vector.get(0, 5))
         self.assertEqual(self.initial_list[0:1], self.vector.get(0, 1))
         self.assertEqual(self.initial_list[2:4], self.vector.get(2, 4))
+
+        self.assertEqual(0, self.vector[0])
+        self.assertEqual(2, self.vector[2])
+        self.assertEqual([1,2,3], self.vector[1:4])
     
     def test_size(self):
         """Test get opteration"""                        

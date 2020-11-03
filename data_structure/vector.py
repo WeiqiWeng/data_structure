@@ -37,6 +37,30 @@ class Vector:
         
         return '[{}]'.format(','.join(element_str))
 
+    def __getitem__(self, index):
+        """
+        Overloads item indexing
+        
+        Args:
+            i (int): index
+        
+        Returns:
+            data saved in the i-th element in vector
+        """
+
+        return self._elements[index]
+
+    def __setitem__(self, index, value):
+        """
+        Overloads item indexing
+
+        Args:
+            i (int): index
+            value (object): data to be saved in the i-th element in vector
+        """
+
+        self._elements[index] = value
+
     def copy_from(self, iter):
         """
         Copies content from given iterable
@@ -56,6 +80,9 @@ class Vector:
 
         Args:
             iter (iterable): iterable object from which contents are compared with vector
+
+        Returns:
+            True if elements saved in vector are the same as those in given iterable
         """  
         comparison = True
         if self._size == len(iter):
@@ -327,7 +354,12 @@ class Vector:
 
     def bubblesort(self, start=None, end=None, acending=True):
         """
-        Sorts the vector through bubblesort
+        Sorts the vector[start, end) through bubblesort
+
+        Args:
+            start (int): starting index
+            end (int): ending index
+            acending (bool): True if sorting acendingly, False if descendingly
         """
         if start is None or end is None:
             start, end = 0, self._size
@@ -349,7 +381,14 @@ class Vector:
             raise IndexError('starting and ending index out of valid range')
 
     def mergesort(self, low=None, high=None, acending=True):
+        """
+        Sorts the vector[low, high) through mergesort
 
+        Args:
+            low (int): starting index
+            high (int): ending index
+            acending (bool): True if sorting acendingly, False if descendingly
+        """
         if low is None or high is None:
             low, high = 0, self._size
 
@@ -365,7 +404,14 @@ class Vector:
             self._elements[low:high] = self._elements[low:high][::-1]
 
     def merge(self, low, mid, high):
+        """
+        Merges the sorted vector[low, mid) and vector[mid, high)
 
+        Args:
+            low (int): starting index
+            high (int): ending index
+            mid (int): floor((low + high) / 2)
+        """
         left, right = low, mid
         temp_container = []        
         while left < mid or right < high:

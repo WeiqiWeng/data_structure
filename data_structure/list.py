@@ -1,4 +1,4 @@
-class ListNode:
+class ListNode(object):
     def __init__(
         self, 
         data=None, 
@@ -61,7 +61,7 @@ class ListNode:
         self._successor = new_successor
         
 
-class List:
+class List(object):
     def __init__(self, initial_iterable=None):
         """
         Constructor

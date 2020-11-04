@@ -2,7 +2,7 @@ import random
 
 DEFAULT_SIZE = 8
 
-class Vector:
+class Vector(object):
     def __init__(
         self, 
         default_capacity, 
@@ -140,6 +140,12 @@ class Vector:
         Returns vector size
         """
         return self._size
+
+    def __len__(self):
+        """
+        Returns vector size
+        """
+        return self.size()
 
     def empty(self):
         """

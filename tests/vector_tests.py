@@ -2,6 +2,7 @@ import unittest
 
 from data_structure import Vector
 
+
 class TestVector(unittest.TestCase):
 
     @classmethod

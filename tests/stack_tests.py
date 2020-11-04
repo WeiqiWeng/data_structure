@@ -8,8 +8,6 @@ class TestList(unittest.TestCase):
     @classmethod
     def setUpClass(self):                
         self.initial_list = [i for i in range(5)]
-        self.another_list = [i for i in range(-1, -6, -1)]
-        self.random_list = [5,1,4,2,3]
 
     @classmethod
     def tearDownClass(self):

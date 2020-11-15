@@ -13,7 +13,7 @@ class TestVector(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        print ("All tests completed")
+        print ("All tests for vector completed")
 
     def setUp(self):
         # print("Initializing vector")

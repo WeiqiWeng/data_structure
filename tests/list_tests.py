@@ -1,5 +1,6 @@
 import unittest
-
+import sys
+sys.path.append('../')
 from data_structure import List, ListNode
 
 class TestList(unittest.TestCase):
@@ -12,10 +13,10 @@ class TestList(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        print ("All tests completed")
+        print ("All tests for list completed")
 
     def setUp(self):
-        # print("Initializing vector")
+        # print("Initializing list")
         self.list = List(initial_iterable=self.initial_list)
 
     def tearDown(self):

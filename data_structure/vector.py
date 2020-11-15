@@ -5,7 +5,7 @@ DEFAULT_SIZE = 8
 class Vector(object):
     def __init__(
         self, 
-        default_capacity, 
+        default_capacity=DEFAULT_SIZE, 
         default_element=None, 
         initial_iter=None):
         """

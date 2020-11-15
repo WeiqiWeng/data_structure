@@ -3,7 +3,7 @@ import unittest
 from data_structure import Queue
 
 
-class TestList(unittest.TestCase):
+class TestQueue(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):                
@@ -11,10 +11,10 @@ class TestList(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        print ("All tests completed")
+        print ("All tests for queue completed")
 
     def setUp(self):
-        # print("Initializing vector")
+        # print("Initializing queue")
         self.queue = Queue(8, 0, initial_iter=self.initial_list)
 
     def tearDown(self):

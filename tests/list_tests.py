@@ -149,6 +149,15 @@ class TestList(unittest.TestCase):
         self.assertEqual(3, self.list.find(3).data())
         self.assertEqual(None, self.list.find(-1))
 
+    def test_reverse(self):
+        """Test reversing the list"""
+        self.list.copy_from(self.initial_list) 
+        self.assertEqual(self.initial_list[::-1], self.list.reverse().serialize())
+        self.list.copy_from(self.random_list)        
+        self.assertEqual(self.random_list[::-1], self.list.reverse().serialize())
+        self.list.copy_from(self.another_list)        
+        self.assertEqual(self.another_list[::-1], self.list.reverse().serialize())
+
 if __name__ == '__main__':
 
     unittest.main(verbosity=1)        

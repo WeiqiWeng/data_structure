@@ -251,6 +251,26 @@ class List(object):
 
         return temp
 
+    def reverse(self):
+
+        if self._size <= 0:
+            return
+
+        current_node = self._head
+
+        while current_node:
+            old_successor = current_node._successor
+            current_node._successor = current_node._precursor
+            current_node._precursor = old_successor
+            current_node = current_node._precursor
+
+        tmp = self._tail
+        self._tail = self._head
+        self._head = tmp
+
+        return self
+
+
 
 
 

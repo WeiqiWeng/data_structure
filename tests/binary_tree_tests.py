@@ -15,7 +15,7 @@ class TestBinaryTree(unittest.TestCase):
     def _generate_binary_tree(self):
         
         binary_tree = BinaryTree()
-        binary_tree.copy_from_iterable([0,1,2,None,4,None,6,None,None,7])
+        binary_tree.deserialize([0,1,2,None,4,None,6,7])
         
         return binary_tree
 
@@ -24,7 +24,7 @@ class TestBinaryTree(unittest.TestCase):
         Generates a 3-level full binary tree
         """
         full_binary_tree = BinaryTree()
-        full_binary_tree.copy_from_iterable([0,1,2,3,4,5,6])
+        full_binary_tree.deserialize([0,1,2,3,4,5,6])
         
         return full_binary_tree
 
@@ -35,7 +35,7 @@ class TestBinaryTree(unittest.TestCase):
         called left tree for simplicity
         """
         left_tree = BinaryTree()
-        left_tree.copy_from_iterable([0,1,None,2,None,None,None,3])
+        left_tree.deserialize([0,1,None,2,None,3])
 
         return left_tree
 
@@ -46,7 +46,7 @@ class TestBinaryTree(unittest.TestCase):
         called right tree for simplicity
         """
         right_tree = BinaryTree()
-        right_tree.copy_from_iterable([0,None,1,None,None,None,2,None,None,None,None,None,None,None,3])
+        right_tree.deserialize([0,None,1,None,2,None,3])
 
         return right_tree
 
@@ -61,6 +61,26 @@ class TestBinaryTree(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_serialize(self):
+        """
+        Tests tree serialization
+        """
+        self.assertEqual([0,1,2,None,4,None,6,7], self.binary_tree.serialize())
+        self.assertEqual([0,1,None,2,None,3], self.left_tree.serialize())
+        self.assertEqual([0,None,1,None,2,None,3], self.right_tree.serialize())
+        self.assertEqual([0,1,2,3,4,5,6], self.full_binary_tree.serialize())
+        self.assertEqual([], self.empty_tree.serialize())
+
+    def test_deserialize(self):
+        """
+        Tests tree deserialization
+        """
+        self.assertEqual([0,1,2,None,4,None,6,7], self.binary_tree.deserialize([0,1,2,None,4,None,6,7]).serialize())
+        self.assertEqual([0,1,None,2,None,3], self.left_tree.deserialize([0,1,None,2,None,3]).serialize())
+        self.assertEqual([0,None,1,None,2,None,3], self.right_tree.deserialize([0,None,1,None,2,None,3]).serialize())
+        self.assertEqual([0,1,2,3,4,5,6], self.full_binary_tree.deserialize([0,1,2,3,4,5,6]).serialize())
+        self.assertEqual([], self.empty_tree.deserialize([]).serialize())
+
     def test_copy_from_iterable(self):
         """
         Tests tree construction
@@ -71,9 +91,9 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(2, self.full_binary_tree.depth())
         self.assertEqual(True, self.full_binary_tree.is_full_binary_tree())        
         self.assertEqual([
-            (0, 2, 0), 
-            (1, 1, 1), (2, 1, 1), 
-            (3, 0, 2), (4, 0, 2), (5, 0, 2), (6, 0, 2)], self.full_binary_tree._level_order_traversal())
+            [(0, 2, 0)], 
+            [(1, 1, 1), (2, 1, 1)], 
+            [(3, 0, 2), (4, 0, 2), (5, 0, 2), (6, 0, 2)]], self.full_binary_tree._level_order_traversal())
         self.assertEqual(False, self.full_binary_tree.empty())
 
         # binary tree
@@ -81,10 +101,10 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(3, self.binary_tree.depth())
         self.assertEqual(False, self.binary_tree.is_full_binary_tree())
         self.assertEqual([
-            (0, 3, 0), 
-            (1, 2, 1), (2, 2, 1), 
-            None,      (4, 1, 2), None,      (6, 1, 2), 
-            None,      None,      (7, 0, 3)], self.binary_tree._level_order_traversal())
+            [(0, 3, 0)], 
+            [(1, 2, 1), (2, 2, 1)], 
+            [(4, 1, 2), (6, 1, 2)], 
+            [(7, 0, 3)]], self.binary_tree._level_order_traversal())
 
         # empty tree
         self.assertEqual(True, self.empty_tree.empty())
@@ -93,19 +113,19 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(4, self.left_tree.size())
         self.assertEqual(3, self.left_tree.depth())
         self.assertEqual([
-            (0, 3, 0), 
-            (1, 2, 1), None, 
-            (2, 1, 2), None, None, None, 
-            (3, 0, 3)], self.left_tree._level_order_traversal())
+            [(0, 3, 0)], 
+            [(1, 2, 1)], 
+            [(2, 1, 2)], 
+            [(3, 0, 3)]], self.left_tree._level_order_traversal())
 
         # right tree
         self.assertEqual(4, self.right_tree.size())
         self.assertEqual(3, self.right_tree.depth())
         self.assertEqual([
-            (0, 3, 0), 
-            None,     (1, 2, 1),  
-            None,     None,     None,     (2, 1, 2), 
-            None,     None,     None,     None,     None,     None,     None,     (3, 0, 3)], self.right_tree._level_order_traversal())
+            [(0, 3, 0)], 
+            [(1, 2, 1)],  
+            [(2, 1, 2)], 
+            [(3, 0, 3)]], self.right_tree._level_order_traversal())
 
     def test_insert_root(self):
         """
@@ -120,11 +140,11 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(-1, self.binary_tree.root().data())
 
         self.assertEqual([
-            (-1, 4, 0),
-            (0, 3, 1), None,      
-            (1, 2, 2), (2, 2, 2), None,      None, 
-            None,      (4, 1, 3), None,      (6, 1, 3),      None,      None,     None,      None,
-            None,      None,      (7, 0, 4)], self.binary_tree._level_order_traversal())
+            [(-1, 4, 0)],
+            [(0, 3, 1)],      
+            [(1, 2, 2), (2, 2, 2)],
+            [(4, 1, 3), (6, 1, 3)],
+            [(7, 0, 4)]], self.binary_tree._level_order_traversal())
             
     def test_insert_left_subtree(self):
         """
@@ -138,13 +158,13 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(13, self.binary_tree.size())
         self.assertEqual(4, self.binary_tree.depth())
         self.assertEqual([
-            (0, 4, 0),
-            (1, 3, 1), (2, 3, 1),      
-            (0, 2, 2), (4, 2, 2), None,      (6, 2, 2), 
-            (1, 1, 3), (2, 1, 3), (7, 1, 3),      None,      None,      None,     None,      None,
-            (3, 0, 4), (4, 0, 4), (5, 0, 4), (6, 0, 4)], self.binary_tree._level_order_traversal())
+            [(0, 4, 0)],
+            [(1, 3, 1), (2, 3, 1)],      
+            [(0, 2, 2), (4, 2, 2), (6, 2, 2)], 
+            [(1, 1, 3), (2, 1, 3), (7, 1, 3)],
+            [(3, 0, 4), (4, 0, 4), (5, 0, 4), (6, 0, 4)]], self.binary_tree._level_order_traversal())
 
-        # inerts full binary tree below root as right child
+        # inerts full binary tree below root as left child
         self.binary_tree = self._generate_binary_tree()
         subtree_root = self.binary_tree.root()
         full_binary_tree = self._generate_full_binary_tree()
@@ -153,10 +173,10 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(10, self.binary_tree.size())
         self.assertEqual(3, self.binary_tree.depth())
         self.assertEqual([
-            (0, 3, 0),
-            (0, 2, 1), (2, 2, 1),      
-            (1, 1, 2), (2, 1, 2), None,      (6, 1, 2), 
-            (3, 0, 3), (4, 0, 3), (5, 0, 3), (6, 0, 3)], self.binary_tree._level_order_traversal())
+            [(0, 3, 0)],
+            [(0, 2, 1), (2, 2, 1)],      
+            [(1, 1, 2), (2, 1, 2), (6, 1, 2)], 
+            [(3, 0, 3), (4, 0, 3), (5, 0, 3), (6, 0, 3)]], self.binary_tree._level_order_traversal())
 
     def test_insert_right_subtree(self):
         """
@@ -171,21 +191,21 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(4, self.binary_tree.depth())
         
         self.assertEqual([
-            (0, 4, 0),
-            (1, 3, 1), (2, 3, 1),      
-            None,      (0, 2, 2), None,      (6, 2, 2),
-            None,      None,      (1, 1, 3), (2, 1, 3),      None,      None,      None,      None,
-            None,      None,     None,       None,           (3, 0, 4), (4, 0, 4), (5, 0, 4), (6, 0, 4)], self.binary_tree._level_order_traversal())
+            [(0, 4, 0)],
+            [(1, 3, 1), (2, 3, 1)],      
+            [(0, 2, 2), (6, 2, 2)],
+            [(1, 1, 3), (2, 1, 3)],
+            [(3, 0, 4), (4, 0, 4), (5, 0, 4), (6, 0, 4)]], self.binary_tree._level_order_traversal())
 
         self.binary_tree = self._generate_binary_tree()
         subtree_root = self.binary_tree.root()
         full_binary_tree = self._generate_full_binary_tree()
         self.binary_tree.insert_right_subtree(subtree_root, full_binary_tree)
         self.assertEqual([
-            (0, 3, 0),
-            (1, 2, 1), (0, 2, 1),      
-            None,      (4, 1, 2), (1, 1, 2), (2, 1, 2), 
-            None,      None,      (7, 0, 3), None,       (3, 0, 3), (4, 0, 3), (5, 0, 3), (6, 0, 3)], self.binary_tree._level_order_traversal())
+            [(0, 3, 0)],
+            [(1, 2, 1), (0, 2, 1)],      
+            [(4, 1, 2), (1, 1, 2), (2, 1, 2)], 
+            [(7, 0, 3), (3, 0, 3), (4, 0, 3), (5, 0, 3), (6, 0, 3)]], self.binary_tree._level_order_traversal())
 
         self.assertEqual(11, self.binary_tree.size())
         self.assertEqual(3, self.binary_tree.depth())
@@ -200,9 +220,9 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(4, self.full_binary_tree.size())
         self.assertEqual(2, self.full_binary_tree.depth())
         self.assertEqual([
-            (0, 2, 0),
-            None,      (2, 1, 1),      
-            None,      None,      (5, 0, 2),      (6, 0, 2)], self.full_binary_tree._level_order_traversal())
+            [(0, 2, 0)],
+            [(2, 1, 1)],      
+            [(5, 0, 2), (6, 0, 2)]], self.full_binary_tree._level_order_traversal())
 
         self.binary_tree.remove_subtree(self.binary_tree.root().right_child())
 
@@ -231,17 +251,17 @@ class TestBinaryTree(unittest.TestCase):
         self.assertEqual(3, subtree.size())
         self.assertEqual(2, subtree.depth())
         self.assertEqual([
-            (1, 2, 0),
-            None,      (4, 1, 1),      
-            None,      None,      (7, 0, 2)], subtree._level_order_traversal())
+            [(1, 2, 0)],
+            [(4, 1, 1)],      
+            [(7, 0, 2)]], subtree._level_order_traversal())
 
         self.assertEqual(3, self.binary_tree.size())
         self.assertEqual(2, self.binary_tree.depth())
         self.assertEqual(2, self.binary_tree.root().height())
         self.assertEqual([
-            (0, 2, 0),
-            None,      (2, 1, 1),      
-            None,      None,      None,   (6, 0, 2)], self.binary_tree._level_order_traversal())
+            [(0, 2, 0)],
+            [(2, 1, 1)],      
+            [(6, 0, 2)]], self.binary_tree._level_order_traversal())
 
     def test_preorder_traversal(self):
         """
@@ -271,10 +291,17 @@ class TestBinaryTree(unittest.TestCase):
         """
         Tests level order traversal
         """
-        self.assertEqual([0,1,2,None,4,None,6,None,None,7], self.binary_tree.level_order_traversal())
-        self.assertEqual([0,1,2,3,4,5,6], self.full_binary_tree.level_order_traversal())
+        self.assertEqual([
+            [(0, 3, 0)], 
+            [(1, 2, 1), (2, 2, 1)], 
+            [(4, 1, 2), (6, 1, 2)], 
+            [(7, 0, 3)]], self.binary_tree.level_order_traversal())
+        self.assertEqual([
+            [(0, 2, 0)], 
+            [(1, 1, 1), (2, 1, 1)], 
+            [(3, 0, 2), (4, 0, 2), (5, 0, 2), (6, 0, 2)]], self.full_binary_tree._level_order_traversal())
         self.assertEqual([], self.empty_tree.level_order_traversal())
 
-        self.assertEqual([0,1,2,4,6,7], self.binary_tree.level_order_traversal(include_none=False))
-        self.assertEqual([0,1,2,3,4,5,6], self.full_binary_tree.level_order_traversal(include_none=False))
-        self.assertEqual([], self.empty_tree.level_order_traversal(include_none=False)) 
+        self.assertEqual([0,1,2,4,6,7], self.binary_tree.level_order_traversal(flatten=True))
+        self.assertEqual([0,1,2,3,4,5,6], self.full_binary_tree.level_order_traversal(flatten=True))
+        self.assertEqual([], self.empty_tree.level_order_traversal(flatten=True)) 

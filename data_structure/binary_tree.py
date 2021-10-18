@@ -32,6 +32,59 @@ class BinaryTree(object):
         """
         return self._depth
 
+    def deserialize(self, iterable):
+        
+        iterable_size = len(iterable)
+        if iterable_size <= 0:
+            self._root = None
+            self._depth, self._size = 0, 0
+            return self
+        
+        self._root = TreeNode(iterable[0], 0)
+        queue = Queue()
+        queue.enqueue(self._root)        
+        i = 1
+        while not queue.empty():
+            node = queue.dequeue()
+            if i < iterable_size:
+                if iterable[i] is not None:
+                    left_child = TreeNode(iterable[i], 1)
+                    node.insert_left_child(left_child)
+                    queue.enqueue(left_child)
+                i += 1
+                if i < iterable_size and iterable[i] is not None:
+                    right_child = TreeNode(iterable[i], -1)
+                    node.insert_right_child(right_child)
+                    queue.enqueue(right_child)
+                i += 1
+
+        self._depth = self._root.height()
+        self._size = self._root.size()
+
+        return self
+
+    def serialize(self):
+
+        queue = Queue()
+        queue.enqueue(self._root)
+        iterable = []
+
+        while not queue.empty():
+            queue_size = queue.size()
+            for _ in range(queue_size):
+                node = queue.dequeue()
+                if node is not None:
+                    iterable.append(node.data())
+                    queue.enqueue(node.left_child())
+                    queue.enqueue(node.right_child())
+                else:
+                    iterable.append(None)
+
+        while iterable and iterable[-1] is None:
+            iterable.pop()
+        
+        return iterable
+
     def copy_from_iterable(self, iterable):
         """
         Copies data from iterable, which are put into the binary tree in level order
@@ -378,17 +431,8 @@ class BinaryTree(object):
 
         return data_array
 
-    def _level_order_traversal(self, starting_node=None, include_none=True):
-        """
-        Traverses the binary tree from top level to bottom and saves data/height/depth for testing purpose
+    def _level_order_traversal(self, starting_node=None):
 
-        Args:
-            starting_node (TreeNode): traverse the subtree rooted at given starting node
-            include_none (bool): True if including None node in binary tree
-
-        Returns:
-            data_array ([3-tuple]): [(data saved in node, height, depth)]
-        """
         data_array = []
 
         # returns empty list if the binary tree is empty
@@ -400,52 +444,90 @@ class BinaryTree(object):
             starting_node = self._root
 
         queue = Queue()
-        # (data, height, depth, left child, right child)
-        queue.enqueue(
-            (starting_node.data(), 
-             starting_node.height(),
-             starting_node.depth(),
-             starting_node.left_child(), 
-             starting_node.right_child()))
-
+        queue.enqueue(starting_node)
+        
         while not queue.empty():
-            top_node = queue.dequeue()
-            
-            if top_node[0] is not None:
-                # if it's a non-trival node, append data/height/depth
-                data_array.append((top_node[0], top_node[1], top_node[2]))                        
-            else:
-                data_array.append(None)
-
-            # if the node is not on the deepest level, left and right child can be added into queue and visited soon
-            if top_node[2] < self.depth():
-                    top_node_left_child, top_node_right_child = top_node[3], top_node[4]
-                    
-                    entry = [None, top_node[1] - 1, top_node[2] + 1, None, None]
-                    if top_node_left_child is not None:
-                        entry[0] = top_node_left_child.data()
-                        entry[3] = top_node_left_child.left_child()
-                        entry[4] = top_node_left_child.right_child()
-                    queue.enqueue(tuple(entry))
-                    
-                    entry = [None, top_node[1] - 1, top_node[2] + 1, None, None]
-                    if top_node_right_child is not None:
-                        entry[0] = top_node_right_child.data()
-                        entry[3] = top_node_right_child.left_child()
-                        entry[4] = top_node_right_child.right_child()
-                    queue.enqueue(tuple(entry))
-
-        # if include_none == False, filter out the None element
-        if not include_none:
-            data_array = list(filter(lambda x: x is not None, data_array))
-
-        # remove all None at the end of list since they are trival and not informative
-        while data_array[-1] is None:
-            data_array.pop()
+            queue_size = queue.size()
+            data_same_level = []
+            for _ in range(queue_size):
+                node = queue.dequeue()
+                data_same_level.append((node.data(), node.height(), node.depth()))
+                if node.has_left_child():
+                    queue.enqueue(node.left_child())
+                if node.has_right_child():
+                    queue.enqueue(node.right_child())
+            data_array.append(data_same_level)
 
         return data_array
 
-    def level_order_traversal(self, starting_node=None, include_none=True):
+    # def _level_order_traversal(self, starting_node=None, include_none=True):
+    #     """
+    #     Traverses the binary tree from top level to bottom and saves data/height/depth for testing purpose
+
+    #     Args:
+    #         starting_node (TreeNode): traverse the subtree rooted at given starting node
+    #         include_none (bool): True if including None node in binary tree
+
+    #     Returns:
+    #         data_array ([3-tuple]): [(data saved in node, height, depth)]
+    #     """
+    #     data_array = []
+
+    #     # returns empty list if the binary tree is empty
+    #     if self._root is None:
+    #         return data_array
+
+    #     # traverse from root if starting node is not given
+    #     if starting_node is None:
+    #         starting_node = self._root
+
+    #     queue = Queue()
+    #     # (data, height, depth, left child, right child)
+    #     queue.enqueue(
+    #         (starting_node.data(), 
+    #          starting_node.height(),
+    #          starting_node.depth(),
+    #          starting_node.left_child(), 
+    #          starting_node.right_child()))
+
+    #     while not queue.empty():
+    #         top_node = queue.dequeue()
+            
+    #         if top_node[0] is not None:
+    #             # if it's a non-trival node, append data/height/depth
+    #             data_array.append((top_node[0], top_node[1], top_node[2]))                        
+    #         else:
+    #             data_array.append(None)
+
+    #         # if the node is not on the deepest level, left and right child can be added into queue and visited soon
+    #         if top_node[2] < self.depth():
+    #                 top_node_left_child, top_node_right_child = top_node[3], top_node[4]
+                    
+    #                 entry = [None, top_node[1] - 1, top_node[2] + 1, None, None]
+    #                 if top_node_left_child is not None:
+    #                     entry[0] = top_node_left_child.data()
+    #                     entry[3] = top_node_left_child.left_child()
+    #                     entry[4] = top_node_left_child.right_child()
+    #                 queue.enqueue(tuple(entry))
+                    
+    #                 entry = [None, top_node[1] - 1, top_node[2] + 1, None, None]
+    #                 if top_node_right_child is not None:
+    #                     entry[0] = top_node_right_child.data()
+    #                     entry[3] = top_node_right_child.left_child()
+    #                     entry[4] = top_node_right_child.right_child()
+    #                 queue.enqueue(tuple(entry))
+
+    #     # if include_none == False, filter out the None element
+    #     if not include_none:
+    #         data_array = list(filter(lambda x: x is not None, data_array))
+
+    #     # remove all None at the end of list since they are trival and not informative
+    #     while data_array[-1] is None:
+    #         data_array.pop()
+
+    #     return data_array
+
+    def level_order_traversal(self, starting_node=None, flatten=False):
         """
         Traverses the binary tree from top level to bottom
 
@@ -457,13 +539,9 @@ class BinaryTree(object):
             data_array ([object]): [data saved in node]
         """
 
-        data_array = self._level_order_traversal(starting_node, include_none)
-
-        if include_none:
-            data_array = [data[0] if data is not None else None for data in data_array]
-        else:
-            data_array = list(filter(lambda x: x is not None, data_array))
-            data_array = [data[0] for data in data_array]
+        data_array = self._level_order_traversal(starting_node)
+        if flatten:
+            data_array = [data[0] for array in data_array for data in array]
 
         return data_array
 

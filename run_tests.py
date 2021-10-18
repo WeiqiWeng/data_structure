@@ -1,12 +1,13 @@
 import unittest
 
 from tests import (
-    TestBinaryTree, 
-    TestList, 
-    TestQueue, 
-    TestStack, 
-    TestVector, 
-    TestBinaryTree)
+    # TestBinaryTree, 
+    # TestList, 
+    # TestQueue, 
+    # TestStack, 
+    # TestVector, 
+    TestGraph)
+
 
 
 if __name__ == '__main__':

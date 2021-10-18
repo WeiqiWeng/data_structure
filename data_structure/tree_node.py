@@ -270,7 +270,7 @@ class TreeNode(object):
         if self.has_right_child():
             queue.append(self.right_child())
 
-        while len(queue):
+        while queue:
             node = queue.pop()
 
             node_current_height = node.height()  
@@ -423,7 +423,7 @@ class TreeNode(object):
         if self.has_right_child():
             stack.append(self.right_child())
 
-        while len(stack):
+        while stack:
             node = stack.pop()            
 
             if node.has_left_child():
